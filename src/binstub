@@ -34,46 +34,30 @@ while IFS= read -r line; do
   if [ -z "${!_STUB_END}" ] && [ $index -eq "${!_STUB_INDEX}" ]; then
     # Split the line into an array of arguments to
     # match and a command to run to produce output.
-    command=":"
-    patterns=" $line"
+    cmd=":"
+    patterns="$line"
     if [ "$patterns" != "${patterns/ : }" ]; then
-      command="${patterns#* : }"
+      cmd="${patterns#* : }"
       patterns="${patterns%% : *}"
     fi
 
-    # Naively split patterns by whitespace for now.
-    # In the future, use a sed script to split while
-    # respecting quoting.
-    set -f
-    patterns=($patterns)
-    set +f
-    arguments=("$@")
-
-    [ ${#patterns[@]} -eq ${#arguments[@]} ]
-    result=$?
-    # Match the expected argument patterns to actual
-    # arguments.
-    for (( i=0; i<${#patterns[@]}; i++ )); do
-      pattern="${patterns[$i]}"
-      argument="${arguments[$i]}"
-
-      case "$argument" in
-        $pattern ) ;;
-        * ) result=1 ;;
-      esac
-    done
+    # No splitting required, just let pattern be a glob matching args (or not)
+    case "$*" in
+      $patterns ) result=0 ;;
+      * ) result=1 ;;
+    esac
 
     # If the arguments matched, evaluate the command
     # in a subshell. Otherwise, log the failure.
     if [ $result -eq 0 ] ; then
       set +e
-      ( eval "$command" )
+      ( eval "$cmd" )
       status="$?"
       set -e
     else
       echo "Unexpected call to $program: Call $index arguments don't match." >&2
-      echo "Expected: ${patterns[*]}" >&2
-      echo "Actual  : ${arguments[*]}" >&2
+      echo "Expected: $patterns" >&2
+      echo "Actual  : $*" >&2
       eval "${_STUB_RESULT}"=1
       status=1
     fi
