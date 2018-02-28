@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## feature/setup_teardown_auto-unstub_error-reporting - ...
+
+* Tests for stubbing and unstubbing from setup and teardown
+
+### Added
+
+* `tests/test_setup_teardown.bats`
+
 ## feature/bats-library-format - 2017-05-23
 
 * Follow the bats plugin guidelines set out by [bats-docs](https://github.com/ztombol/bats-docs)
