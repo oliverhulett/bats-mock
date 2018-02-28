@@ -5,7 +5,7 @@ PATH="$BATS_MOCK_BINDIR:$PATH"
 
 stub() {
   local program="$1"
-  local prefix="$(echo "$program" | tr a-z- A-Z_)"
+  local prefix="_$(echo -n "$program" | tr -cs [:alnum:] _ | tr [:lower:] [:upper:])"
   shift
 
   export "${prefix}_STUB_PLAN"="${BATS_MOCK_TMPDIR}/${program}-stub-plan"
@@ -21,7 +21,7 @@ stub() {
 
 unstub() {
   local program="$1"
-  local prefix="$(echo "$program" | tr a-z- A-Z_)"
+  local prefix="_$(echo -n "$program" | tr -cs [:alnum:] _ | tr [:lower:] [:upper:])"
   local path="${BATS_MOCK_BINDIR}/${program}"
 
   export "${prefix}_STUB_END"=1
@@ -31,5 +31,8 @@ unstub() {
 
   rm -f "$path"
   rm -f "${BATS_MOCK_TMPDIR}/${program}-stub-plan" "${BATS_MOCK_TMPDIR}/${program}-stub-run"
+  if [ $STATUS -ne 0 ]; then
+    fail "unstub $program failed with status $STATUS"
+  fi
   return "$STATUS"
 }

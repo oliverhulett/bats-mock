@@ -1,0 +1,29 @@
+matrix:
+  include:
+  - IMAGE: ubuntu:17.04
+    INSTALL_GIT: apt-get -qq update && apt-get -qqy install bash git
+  - IMAGE: ubuntu:16.10
+    INSTALL_GIT: apt-get -qq update && apt-get -qqy install bash git
+  - IMAGE: centos:7
+    INSTALL_GIT: yum -q -y upgrade bash && yum -q -y install git
+  - IMAGE: centos:6
+    INSTALL_GIT: yum -q -y upgrade bash && yum -q -y install git
+pipeline:
+  setup:
+    commands:
+    - ${INSTALL_GIT}
+    - rm -rf tests/bats tests/bats-support tests/bats-assert || true
+    - ./tests/install.sh
+    image: ${IMAGE}
+  test:
+    commands:
+    - ./tests/run.sh
+    image: ${IMAGE}
+  teardown:
+    commands:
+    - rm -rf tests/bats tests/bats-support tests/bats-assert || true
+    image: ${IMAGE}
+    when:
+      status:
+      - failure
+      - success

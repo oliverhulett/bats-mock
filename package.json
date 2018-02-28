@@ -5,7 +5,8 @@
   "author": "Sam Stephenson <sstephenson@gmail.com> (http://sstephenson.us/)",
   "contributors": [
     "Mislav Marohnić <mislav.marohnic@gmail.com> (http://mislav.net)",
-    "Jason Karns <jason@karns.name> (http://jason.karns.name/)"
+    "Jason Karns <jason@karns.name> (http://jason.karns.name/)",
+    "Oliver Hulett <oliver.hulett@gmail.com> (https://github.com/oliverhulett)"
   ],
   "homepage": "https://github.com/jasonkarns/bats-mock#readme",
   "repository": {
@@ -15,10 +16,10 @@
   "bugs": {
     "url": "https://github.com/jasonkarns/bats-mock/issues"
   },
-  "main": "stub.bash",
+  "main": "src/stub.bash",
   "files": [
-    "binstub",
-    "stub.bash"
+    "src/binstub",
+    "src/stub.bash"
   ],
   "peerDependencies": {
     "bats": "^0.4.2"
